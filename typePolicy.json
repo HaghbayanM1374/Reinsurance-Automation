@@ -1,0 +1,43 @@
+[{
+        "value": "FireInsurance",
+        "label": "بیمه‌نامه آتش سوزی",
+		"groupboss": "HeadOfSupervisionOnFireInsuranceIssuance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های آتش‌سوزی",
+		"deputyDirector":"null"
+    }, {
+        "value": "EngineeringInsurance",
+        "label": " بیمه‌نامه مهندسی",
+		"groupboss": "HeadOfSupervisionOnEngineeringInsuranceIssuance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های مهندسی و انرژی",
+		"deputyDirector":"null"
+    }, {
+        "value": "CargoInsurance",
+        "label": "بیمه‌نامه باربری",
+		"groupboss": "HeadOfTransport&Ship&AirlineInsurance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های  حمل‌ونقل، کشتی و هواپیما",
+		"deputyDirector":"deputyOfLiabiliy",
+		"deputyDirectorLabel":"معاون مدیر بیمه‌های مسئولیت و حمل‌و‌نقل"
+    }, {
+        "value": "AircraftInsurance",
+        "label": "بیمه‌نامه هواپیما و کشتی",
+		"groupboss": "HeadOfTransport&Ship&AirlineInsurance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های  حمل‌ونقل، کشتی و هواپیما",
+		"deputyDirector":"deputyOfLiabiliy",
+		"deputyDirectorLabel":"معاون مدیر بیمه‌های مسئولیت و حمل‌و‌نقل"
+    }, {
+        "value": "LiabilityCariers",
+        "label": "مسئولیت متصدیان حمل",
+		"groupboss": "HeadOfSupervisionOnLiabilityInsuranceIssuance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های  مسئولیت",
+		"deputyDirector":"deputyOfLiabiliy",
+		"deputyDirectorLabel":"معاون مدیر بیمه‌های مسئولیت و حمل‌و‌نقل"
+    }, {
+        "value": "Liability",
+        "label": "مسئولیت",
+		"groupboss": "HeadOfSupervisionOnLiabilityInsuranceIssuance",
+		"groupbossLabel":"رییس اداره صدور بیمه‌های  مسئولیت",
+		"deputyDirector":"deputyOfLiabiliy",
+		"deputyDirectorLabel":"معاون مدیر بیمه‌های مسئولیت و حمل‌و‌نقل"
+    }
+]
+ 
