@@ -1,0 +1,35 @@
+{
+    "display": "form",
+        "settings": {
+        "recaptcha": {
+            "isEnabled": "true",
+            "siteKey": "6LcbBlIaAAAAALO-boii_2Kf2Td4xJNxvKx_oZZ3"
+        }
+    },
+    "components": [
+        {
+            "label": "Panel",
+            "title": "سابقه",
+            "collapsible": false,
+            "mask": false,
+            "tableView": false,
+            "alwaysEnabled": false,
+            "theme":"success",
+            "type": "panel",
+            "input": false,
+            "key": "panelMain",
+            "conditional": {
+                "show": "",
+                "when": "",
+                "json": ""
+            },
+            "components": [
+{"type":"fieldset","key":"fieldset_historyReinsurance","input":false,"label":"historyReinsurance","clearOnHide":false,"hidden":false,"validate":{},"legend":"تاریخچه مکاتبات بیمه اتکایی","components":[{"type":"columns","key":"Event_0lfasib_Columns1","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"textfield","key":"reinsuranceCompanyCandidate","input":true,"label":"شرکت بیمه گر اتکایی کاندید","clearOnHide":false,"hidden":false,"validate":{}}]},{"width":6,"type":"column","components":[{"type":"number","key":"acceptRateReinsurance","input":true,"label":"نرخ اتکایی پذیرفته شده","suffix":"درصد","clearOnHide":false,"hidden":false,"validate":{"min":"0","max":"100"},"customClass":"az-number","delimiter":true}]},{"width":12,"type":"column","components":[{"type":"datagrid","key":"historytable","input":true,"label":"تاریخچه نامه‌نگاری با شرکت اتکایی","clearOnHide":false,"persistent":false,"hidden":false,"validate":{},"disabled":true,"components":[{"type":"htmlelement","key":"rowIndex","input":false,"label":"ردیف","clearOnHide":false,"hidden":false,"validate":{},"content":"{{rowIndex+1}}","tag":"span"},{"type":"textfield","key":"companyName","input":true,"label":"نام شرکت","clearOnHide":false,"hidden":false,"validate":{}},{"type":"textfield","key":"date","input":true,"label":"تاریخ بازگشت به شرکت بیمه‌گر اتکایی","defaultValue":"historyList.dateSuggest","clearOnHide":false,"hidden":false,"validate":{"customMessage":"تاریخ معتبر نیست.","custom":"valid=validateDate(input);"},"customClass":"persian-date","inputMask":"9999/99/99"},{"type":"number","key":"suggestRate","input":true,"label":"نرخ پیشنهادی شرکت بیمه دی","suffix":"درصد","defaultValue":"historyList.suggestRate","clearOnHide":false,"hidden":false,"validate":{"min":"0","max":"100"},"customClass":"az-number","delimiter":true},{"type":"number","key":"offerRateToReinsuranceCompany","input":true,"label":"نرخ پیشنهادی شرکت بیمه‌گر اتکایی","suffix":"درصد","defaultValue":"historyList.offerRateToReinsuranceCompany","clearOnHide":false,"hidden":false,"validate":{"min":"0","max":"100"},"customClass":"az-number","delimiter":true},{"type":"textfield","key":"questionForNegotiation","input":true,"label":"وضعیت درخواست ","clearOnHide":false,"hidden":false,"validate":{}}],"addAnother":"افزودن ردیف دیگر"}]}]}]},
+{"type":"fieldset","key":"fieldset_informationPolicy","input":false,"label":"informationPolicy","clearOnHide":false,"hidden":false,"validate":{},"legend":"اطلاعات بیمه نامه","components":[{"type":"columns","key":"Event_0lfasib_Columns2","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"textfield","key":"typePolicy.label","input":true,"label":"نوع بیمه‌ نامه","clearOnHide":false,"hidden":false,"validate":{}}]},{"width":6,"type":"column","components":[{"type":"textfield","key":"namePolicyholder","input":true,"label":"نام بیمه گزار","clearOnHide":false,"hidden":false,"validate":{}}]}]},{"type":"columns","key":"Event_0lfasib_Columns3","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"textfield","key":"numberPolicyholder","input":true,"label":"شماره بیمه‌نامه","clearOnHide":false,"hidden":false,"validate":{}}]},{"width":6,"type":"column","components":[{"type":"file","key":"filePolicy","input":true,"label":"بیمه‌نامه","multiple":true,"clearOnHide":false,"hidden":false,"validate":{},"fileMinSize":"1KB","fileMaxSize":"5MB","storage":"base64","filePattern":".xlsx,.docx,.jpg,.pdf,.png"}]}]},{"type":"columns","key":"Event_0lfasib_Columns4","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"file","key":"fileReport","input":true,"label":"گزارش","multiple":true,"clearOnHide":false,"hidden":false,"validate":{},"fileMinSize":"1KB","fileMaxSize":"5MB","storage":"base64","filePattern":".xlsx,.docx,.jpg,.pdf,.png"}]}]}]},
+{"type":"columns","key":"buttonsColumns","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"button","key":"submit","input":true,"label":"تایید و ارسال","clearOnHide":false,"hidden":false,"validate":{},"disableOnInvalid":false,"theme":"primary","action":"submit"}]}]}            ],
+            "collapsed": false,
+            "reorder": false
+        }
+
+    ]
+}

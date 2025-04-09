@@ -1,0 +1,34 @@
+{
+    "display": "form",
+        "settings": {
+        "recaptcha": {
+            "isEnabled": "true",
+            "siteKey": "6LcbBlIaAAAAALO-boii_2Kf2Td4xJNxvKx_oZZ3"
+        }
+    },
+    "components": [
+        {
+            "label": "Panel",
+            "title": "ثبت اطلاعات و الصاق بیمه‌نامه",
+            "collapsible": false,
+            "mask": false,
+            "tableView": false,
+            "alwaysEnabled": false,
+            "theme":"success",
+            "type": "panel",
+            "input": false,
+            "key": "panelMain",
+            "conditional": {
+                "show": "",
+                "when": "",
+                "json": ""
+            },
+            "components": [
+{"type":"fieldset","key":"fieldset_divider_personal","input":false,"label":"divider_personal","clearOnHide":false,"hidden":false,"validate":{},"legend":"مشخصات بیمه نامه","components":[{"type":"columns","key":"Start_Columns1","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"textfield","key":"namePolicyholder","input":true,"label":"نام بیمه گذار","clearOnHide":false,"hidden":false,"validate":{"required":true}}]},{"width":6,"type":"column","components":[{"type":"radio","key":"questionFilePolicy","input":true,"label":"بیمه‌نامه صادر شده است؟","clearOnHide":false,"hidden":false,"validate":{},"values":[{"value":"Yes","label":"بله"},{"value":"No","label":"خیر"}],"inline":true}]}]},{"type":"columns","key":"Start_Columns2","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"textfield","key":"numberPolicyholder","input":true,"label":" شماره بیمه نامه","clearOnHide":false,"hidden":false,"validate":{"required":true},"customConditional":"show=data.questionFilePolicy=='Yes'"}]},{"width":4,"type":"column","components":[{"type":"file","key":"filePolicy","input":true,"label":"فایل بیمه‌نامه","multiple":true,"clearOnHide":false,"hidden":false,"validate":{"required":true},"customConditional":"show=data.questionFilePolicy=='Yes'","fileMinSize":"1KB","fileMaxSize":"5MB","storage":"base64","filePattern":".xlsx,.docx,.jpg,.pdf,.png"}]}]}]},
+{"type":"columns","key":"buttonsColumns","input":false,"label":"Columns","clearOnHide":false,"hidden":false,"validate":{},"columns":[{"width":6,"type":"column","components":[{"type":"button","key":"submit","input":true,"label":"ادامه","clearOnHide":false,"hidden":false,"validate":{},"disableOnInvalid":false,"theme":"primary","action":"submit"}]}]}            ],
+            "collapsed": false,
+            "reorder": false
+        }
+
+    ]
+}
