@@ -1,0 +1,1021 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ssbp="www.sparxsystems.com.au/bpmn20" id="EAPK_3E484AFC_313D_4632_9561_279D2FAF6BE3" name="Package1" targetNamespace="www.sparxsystems.com.au/bpmn20" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:collaboration id="EAID_DC000000_313D_4632_9561_279D2FAF6BE3" isClosed="false">
+    <bpmn:participant id="GETREINSURANCE" name="اخذ پوشش اتکایی اختیاری" processRef="BP-05-01" />
+  </bpmn:collaboration>
+  <bpmn:process id="BP-05-01" name="اخذ پوشش اتکایی اختیاری" processType="None" isClosed="false" isExecutable="true" camunda:candidateStarterGroups="TechnicalManager" camunda:candidateStarterUsers="m_sadei">
+    <bpmn:laneSet id="EAID_LS000000_0AB5_44b4_B0B4_39E5F07F629C">
+      <bpmn:lane id="Lane_10232yv" name="کارشناس فنی">
+        <bpmn:flowNodeRef>AttachPolicyAndDocumentByExpert</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_00z8hd1" name="رییس اداره فنی">
+        <bpmn:flowNodeRef>Gateway_0v24i5p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AttachPolicyAndDocumentByBoss</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_B2E9DA68_F378_4d36_A799_DC1C58052534" name="رییس اداره واگذاری اتکایی">
+        <bpmn:flowNodeRef>EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0vxad17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>LetterOfferReviewByReinsuranceSupervisor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>DocumentReviewByReinsuranceSupervisor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_01ncjze</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ReviewDocumentByBoss</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0ix7c4o</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>responseEmailByBoss</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_C266A02B_C2F8_4fa8_8918_DF2D3EC441D8" name="کارشناس واگذاری اتکایی اختیاری">
+        <bpmn:flowNodeRef>Gateway_0rwp0dl</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ProvidingOfferLetter</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>responseEmailByExpert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1kfazx9</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_5F7693DE_3A53_4a4b_8711_01C82E746AA7" name="مدیر بیمه‌های اتکایی و امور بین الملل">
+        <bpmn:flowNodeRef>DocumentReviewByReinsuranceManager</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_182t1rp_accept</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SendEmail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_184ac36</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1xzndew</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>recieveInformation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_10wj7xf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1821pf8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ReviewDocumentByManager</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1uys5pb</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1bcwtnn</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_9527B4FF_5ECD_410d_9ADB_6028940B1C73" name="مدیر فنی">
+        <bpmn:flowNodeRef>DocumentReviewBytechnicalManager</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_138C74AF_D110_43cb_B9D9_BC7D36A20D4E" name="مسئول دبیرخانه">
+        <bpmn:flowNodeRef>Activity_1a9z7pi</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="DocumentReviewByReinsuranceManager" name="ارجاع اصل بیمه‌نامه، گزارش بازدید و سایر مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="Reinsuranc&#38;InternationalAffairsManager">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/DocumentReviewByReinsuranceManager</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('DocumentReviewByReinsuranceManager_counter');n=(n==null)?1:n+1;task.execution.setVariable('DocumentReviewByReinsuranceManager_counter',n);
+task.execution.setVariable('assigneeDocumentReviewByReinsuranceManager',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0kacgrx</bpmn:incoming>
+      <bpmn:incoming>EAID_7A2D0660_D981_4891_AC79_D721A1469C50</bpmn:incoming>
+      <bpmn:outgoing>EAID_362AA0BD_1AA2_4656_AF7E_6BA5FFA91F64</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_182t1rp_accept">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12oqz9f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1nbmceq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_15n7dk2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="SendEmail" name="ارجاع نامه" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="Reinsuranc&#38;InternationalAffairsManager">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/SendEmail</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('SendEmail_counter');n=(n==null)?1:n+1;task.execution.setVariable('SendEmail_counter',n);
+task.execution.setVariable('assigneeSendEmail',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_0BC97EF0_3B9B_471f_91E4_DA33E1BC8D78</bpmn:incoming>
+      <bpmn:incoming>Flow_1tjjo89</bpmn:incoming>
+      <bpmn:outgoing>Flow_12oqz9f</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434" name="آیا مورد تایید است؟">
+      <bpmn:incoming>EAID_F4A0E083_4094_49a7_87B9_25CAF69A4ECD</bpmn:incoming>
+      <bpmn:outgoing>EAID_A7E604F2_52A1_4663_B0BC_9F6F1464C148</bpmn:outgoing>
+      <bpmn:outgoing>EAID_0BC97EF0_3B9B_471f_91E4_DA33E1BC8D78</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0rwp0dl" name="آیا مورد تایید است؟">
+      <bpmn:incoming>Flow_0vzg11b</bpmn:incoming>
+      <bpmn:outgoing>Flow_1od7f25</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kacgrx</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0vxad17" name="تهیه نامه توسط رییس اداره انجام می شود؟">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>EAID_330B66D0_C6BE_451f_8CD2_D8170F684971</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vzg11b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1tjjo89</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="ProvidingOfferLetter" name="تهیه نامه پیشنهادی واگذاری" implementation="##unspecified" camunda:formKey="app:task-form" camunda:assignee="${users.id}" camunda:candidateGroups="OptionalAssignableReinsuranceExpert">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">task.execution.setVariable('sendTable2',sendTable1)
+///email
+task.execution.setVariable('sendTableEmail',sendTable2.findAll{it.sendEmail==true})</camunda:script>
+        </camunda:taskListener>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/ProvidingOfferLetter</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('ProvidingOfferLetter_counter');n=(n==null)?1:n+1;task.execution.setVariable('ProvidingOfferLetter_counter',n);
+task.execution.setVariable('assigneeProvidingOfferLetter',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_A7E604F2_52A1_4663_B0BC_9F6F1464C148</bpmn:incoming>
+      <bpmn:incoming>Flow_1od7f25</bpmn:incoming>
+      <bpmn:outgoing>EAID_8E161C7B_3773_4b2c_BBAC_9EC1DD6C2BE6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="LetterOfferReviewByReinsuranceSupervisor" name="بررسی نامه پیشنهادی واگذاری" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/LetterOfferReviewByReinsuranceSupervisor</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('LetterOfferReviewByReinsuranceSupervisor_counter');n=(n==null)?1:n+1;task.execution.setVariable('LetterOfferReviewByReinsuranceSupervisor_counter',n);
+task.execution.setVariable('assigneeLetterOfferReviewByReinsuranceSupervisor',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_8E161C7B_3773_4b2c_BBAC_9EC1DD6C2BE6</bpmn:incoming>
+      <bpmn:outgoing>EAID_F4A0E083_4094_49a7_87B9_25CAF69A4ECD</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="DocumentReviewByReinsuranceSupervisor" name="ارجاع پیش‌نویس/اصل بیمه‌نامه و سایر مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">execution.setVariable('sendTable1',sendTable)
+execution.setVariable('sendTable2',sendTable)
+
+if(DocumentReviewByReinsuranceSupervisor_counter==1)
+execution.setVariable('transferRiskPercent2',transferRiskPercent1)
+
+///email
+execution.setVariable('sendTableEmail',sendTable2.findAll{it.sendEmail==true})</camunda:script>
+        </camunda:executionListener>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/DocumentReviewByReinsuranceSupervisor</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('DocumentReviewByReinsuranceSupervisor_counter');n=(n==null)?1:n+1;task.execution.setVariable('DocumentReviewByReinsuranceSupervisor_counter',n);
+task.execution.setVariable('assigneeDocumentReviewByReinsuranceSupervisor',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0skaxl0</bpmn:incoming>
+      <bpmn:incoming>Flow_1nbmceq</bpmn:incoming>
+      <bpmn:incoming>Flow_1j8v7c9</bpmn:incoming>
+      <bpmn:outgoing>EAID_330B66D0_C6BE_451f_8CD2_D8170F684971</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_01ncjze" name="آیا مدارک کامل است؟">
+      <bpmn:incoming>EAID_362AA0BD_1AA2_4656_AF7E_6BA5FFA91F64</bpmn:incoming>
+      <bpmn:outgoing>Flow_0skaxl0</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1mcl42f</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="DocumentReviewBytechnicalManager" name="ثبت اطلاعات تکمیلی و الصاق گزارش بازدید و سایر مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:assignee="${starter}">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">task.execution.setVariable('acceptList',new ArrayList())
+task.execution.setVariable('keyList',new ArrayList())</camunda:script>
+        </camunda:taskListener>
+        <camunda:properties>
+          <camunda:property name="columns" value="2" />
+        </camunda:properties>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/DocumentReviewBytechnicalManager</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('DocumentReviewBytechnicalManager_counter');n=(n==null)?1:n+1;task.execution.setVariable('DocumentReviewBytechnicalManager_counter',n);
+task.execution.setVariable('assigneeDocumentReviewBytechnicalManager',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0olpwx2</bpmn:incoming>
+      <bpmn:incoming>Flow_1mcl42f</bpmn:incoming>
+      <bpmn:outgoing>EAID_7A2D0660_D981_4891_AC79_D721A1469C50</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="Start" name="ثبت اطلاعات و الصاق بیمه‌نامه" camunda:formKey="app:start-form" camunda:initiator="starter">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:properties>
+          <camunda:property name="submitLabel" value="ادامه" />
+          <camunda:property name="columns" value="2" />
+        </camunda:properties>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">if(questionFilePolicy=='Yes' )
+{
+execution.setBusinessKey(numberPolicyholder);}
+else
+execution.setBusinessKey(''+new Date().getTime()-1577824200000);
+execution.setVariable('requestUser',currentUser)</camunda:script>
+        </camunda:executionListener>
+      </extensionElements>
+      <bpmn:outgoing>Flow_0olpwx2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="Activity_184ac36" name="ارتباط با شرکت های اتکایی" calledElement="BP-05-01-01">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">def row=new ArrayList()
+row.add(company)
+execution.setVariable('acceptCompany',row)
+
+execution.setVariable('historytableRow',historytable.findAll{it.companyName==company.companyName.label})</camunda:script>
+        </camunda:executionListener>
+        <camunda:in source="acceptCompany" target="acceptCompany" />
+        <camunda:in source="company" target="company" />
+        <camunda:in source="namePolicyholder" target="namePolicyholder" />
+        <camunda:in source="numberPolicyholder" target="numberPolicyholder" />
+        <camunda:in source="fileReport" target="fileReport" />
+        <camunda:in source="retainAsset" target="retainAsset" />
+        <camunda:in source="assetRisk" target="assetRisk" />
+        <camunda:in source="transferRiskPercent" target="transferRiskPercent" />
+        <camunda:in source="questionFilePolicy" target="questionFilePolicy" />
+        <camunda:in source="historytableRow" target="historytable" />
+        <camunda:in source="typePolicy" target="typePolicy" />
+        <camunda:in source="filePolicy" target="filePolicy" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0trx5px</bpmn:incoming>
+      <bpmn:incoming>Flow_1r102qx</bpmn:incoming>
+      <bpmn:outgoing>Flow_03oxek0</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${keyList}" camunda:elementVariable="company" />
+    </bpmn:callActivity>
+    <bpmn:endEvent id="Event_1xzndew">
+      <bpmn:incoming>Flow_0fpzb7p</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="recieveInformation" name="دریافت نرخ از شرکت‌های اتکایی" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="Reinsuranc&#38;InternationalAffairsManager">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">//ثبت جدول تاریخچه
+if(historytable== null) historytable = new java.util.LinkedList()
+for(def obj in sendTable2){
+def row = new java.util.LinkedHashMap()
+row.put('companyName',obj.companyName.label)
+row.put('date',obj.date)
+row.put('suggestRate',obj.pastOffer)
+row.put('offerRateToReinsuranceCompany',obj.offerRateToReinsuranceCompany)
+row.put('questionForNegotiation',obj.questionForNegotiation.label)
+println row
+historytable.add(row);}
+execution.setVariable('historytable',historytable.findAll{it.offerRateToReinsuranceCompany!=null})
+// ثبت مقدار باقیمانده اتکایی
+execution.setVariable('transferRiskPercent2',remainRate)
+//ایجاد لیست تایید شده ها و نیاز به مذاکره
+
+execution.setVariable('keyList',sendTable2.findAll{it.questionForNegotiation.value=='accept'})
+
+execution.setVariable('sendTable2',sendTable2.findAll{it.questionForNegotiation.value=='needClaim'})
+acceptList.addAll(keyList)
+execution.setVariable('acceptList',acceptList)
+///email
+execution.setVariable('sendTableEmail',sendTable2.findAll{it.sendEmail==true})
+
+///notification for manager
+
+execution.setVariable('acceptCompany',keyList.collect{it.companyName.label}.join(", "))
+execution.setVariable('acceptRate',keyList.collect{it.acceptRate}.join(", "))
+
+execution.setVariable('companyPrefix',keyList.size&gt;1?'شرکت‌های':'شرکت‌')
+execution.setVariable('ratePrefix',keyList.size&gt;1?'نرخ‌های':'نرخ')</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">for (Object p:sendTable2){
+p.remove('suggestRate')
+p.remove('questionForNegotiation')
+p.remove('sendTable2.subjectLetter')
+p.remove('sendTable2.textLetter')}</camunda:script>
+        </camunda:executionListener>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/recieveInformation</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('recieveInformation_counter');n=(n==null)?1:n+1;task.execution.setVariable('recieveInformation_counter',n);
+task.execution.setVariable('assigneerecieveInformation',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_1izjnle</bpmn:incoming>
+      <bpmn:incoming>Flow_0aqp00w</bpmn:incoming>
+      <bpmn:outgoing>Flow_04ptn0l</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:inclusiveGateway id="Gateway_10wj7xf" name="آیا کل نرخ اتکایی بصورت کامل واگذار شده است؟">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1giohc7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0trx5px</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0fiu15b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1y7ic82</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1j8v7c9</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0fpzb7p</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:sendTask id="Activity_1821pf8" name="اطلاع رسانی پذیرش نرخ اتکایی" implementation="##WebService" camunda:delegateExpression="${notificationService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="message">با سلام و احترام ;
+${requestUser.label} مدیر محترم
+; ${companyPrefix} ${acceptCompany} در مورد ریسک ارائه شده توسط بیمه گذار ${namePolicyholder} به ترتیب با ${ratePrefix} ${acceptRate} قبول کرده اند.</camunda:inputParameter>
+          <camunda:inputParameter name="recipients">
+            <camunda:list>
+              <camunda:value>Start</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_04ptn0l</bpmn:incoming>
+      <bpmn:outgoing>Flow_1giohc7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="ReviewDocumentByManager" name="ارجاع اصل بیمه‌نامه، گزارش بازدید و سایر مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="Reinsuranc&#38;InternationalAffairsManager">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">execution.setVariable('keyList',sendTable2.findAll{it.questionForNegotiation.value=='accept'})</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/ReviewDocumentByManager</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('ReviewDocumentByManager_counter');n=(n==null)?1:n+1;task.execution.setVariable('ReviewDocumentByManager_counter',n);
+task.execution.setVariable('assigneeReviewDocumentByManager',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0r41wtu</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r102qx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="ReviewDocumentByBoss" name="ارجاع اصل بیمه‌نامه، گزارش بازدید و سایر مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">execution.setVariable('keyList',sendTable2.findAll{it.questionForNegotiation.value=='accept'})</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/ReviewDocumentByBoss</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('ReviewDocumentByBoss_counter');n=(n==null)?1:n+1;task.execution.setVariable('ReviewDocumentByBoss_counter',n);
+task.execution.setVariable('assigneeReviewDocumentByBoss',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_1vjlazp</bpmn:incoming>
+      <bpmn:incoming>Flow_0c0wu28</bpmn:incoming>
+      <bpmn:outgoing>Flow_0r41wtu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0v24i5p">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1gifxbr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0c0wu28</bpmn:outgoing>
+      <bpmn:outgoing>Flow_11zz0yd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="AttachPolicyAndDocumentByExpert" name="الصاق گزارش بازدید و سایر مستندات و در یافت اصل بیمه نامه" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateUsers="${users2.id}">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">def numberPolicyholder2=execution.getVariable('numberPolicyholder2')
+execution.setVariable('numberPolicyholder',numberPolicyholder2)
+def filePolicy2=execution.getVariable('filePolicy2')
+execution.setVariable('filePolicy',filePolicy2)
+def filerReport2=execution.getVariable('filerReport2')
+execution.setVariable('filerReport',filerReport2)</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">execution.setVariable('sendTable2',acceptList)</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/AttachPolicyAndDocumentByExpert</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('AttachPolicyAndDocumentByExpert_counter');n=(n==null)?1:n+1;task.execution.setVariable('AttachPolicyAndDocumentByExpert_counter',n);
+task.execution.setVariable('assigneeAttachPolicyAndDocumentByExpert',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_11zz0yd</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vjlazp</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0ix7c4o">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1tc70s3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oeoo4b</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0aqp00w</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="responseEmailByExpert" name=" پاسخ به ایمیل توسط کارشناس" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="users3">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">for (Object p:sendTable2){
+p.remove('offerRateToReinsuranceCompany')
+p.remove('date')}</camunda:script>
+        </camunda:executionListener>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/responseEmailByExpert</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('responseEmailByExpert_counter');n=(n==null)?1:n+1;task.execution.setVariable('responseEmailByExpert_counter',n);
+task.execution.setVariable('assigneeresponseEmailByExpert',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_1oeoo4b</bpmn:incoming>
+      <bpmn:outgoing>Flow_1izjnle</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="responseEmailByBoss" name=" پاسخ به ایمیل توسط رییس اداره" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="groovy">if(emergencyReinsurance=='Yes'){
+task.setDescription('نیاز فوری به اخذ پوشش اتکایی'+'\nآخرین مهلت زمانی:'+ dateOfDeadline)};</camunda:script>
+        </camunda:taskListener>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">for (Object p:sendTable2){
+p.remove('offerRateToReinsuranceCompany')
+p.remove('date')}</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/responseEmailByBoss</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('responseEmailByBoss_counter');n=(n==null)?1:n+1;task.execution.setVariable('responseEmailByBoss_counter',n);
+task.execution.setVariable('assigneeresponseEmailByBoss',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_1fjm6ol</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tc70s3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="AttachPolicyAndDocumentByBoss" name="ارجاع به کارشناس جهت الصاق بیمه‌نامه و مستندات" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="${typePolicy.groupboss}">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">def numberPolicyholder1=execution.getVariable('numberPolicyholder1')
+execution.setVariable('numberPolicyholder',numberPolicyholder1)
+def filePolicy1=execution.getVariable('filePolicy1')
+execution.setVariable('filePolicy',filePolicy1)
+def filerReport1=execution.getVariable('filerReport1')
+execution.setVariable('filerReport',filerReport1)</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">execution.setVariable('sendTable2',acceptList)</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01/AttachPolicyAndDocumentByBoss</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('AttachPolicyAndDocumentByBoss_counter');n=(n==null)?1:n+1;task.execution.setVariable('AttachPolicyAndDocumentByBoss_counter',n);
+task.execution.setVariable('assigneeAttachPolicyAndDocumentByBoss',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_06e2499</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gifxbr</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Activity_1kfazx9" name="اطلاع رسانی پذیرش نرخ اتکایی" implementation="##WebService" camunda:delegateExpression="${notificationService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="message">با سلام و احترام ;
+${requestUser.label} معاون مدیر محترم
+; ${companyPrefix} ${acceptCompany} در مورد ریسک ارائه شده توسط بیمه گذار ${namePolicyholder} به ترتیب با ${ratePrefix} ${acceptRate} قبول کرده اند.</camunda:inputParameter>
+          <camunda:inputParameter name="recipients">
+            <camunda:list>
+              <camunda:value>@${typePolicy.deputyDirector}</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1y7ic82</bpmn:incoming>
+      <bpmn:outgoing>Flow_06e2499</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="Event_1uys5pb">
+      <bpmn:incoming>Flow_1t2ydln</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="Activity_1bcwtnn" name="اطلاع رسانی پذیرش نرخ اتکایی" implementation="##WebService" camunda:delegateExpression="${notificationService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="message">با سلام و احترام ;
+${requestUser.label} مدیر محترم
+در مورد ریسک ارائه شده توسط بیمه گذار ${namePolicyholder} فرایند اتکایی آن به پایان رسید.</camunda:inputParameter>
+          <camunda:inputParameter name="recipients">
+            <camunda:list>
+              <camunda:value>Start</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_03oxek0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1t2ydln</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="Activity_1a9z7pi" name="Send Mail" implementation="##WebService">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="to">${addressEmail}</camunda:inputParameter>
+            <camunda:inputParameter name="subject">${informationEmail.subjectLetter}</camunda:inputParameter>
+            <camunda:inputParameter name="text">
+              <camunda:script scriptFormat="freemarker">${informationEmail.textLetter}</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="from">bpms@daycent.com</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">execution.setVariable('addressEmail',informationEmail.emailAddress.collect{it.label}.join(", "))</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_15n7dk2</bpmn:incoming>
+      <bpmn:incoming>Flow_0fiu15b</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fjm6ol</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${sendTableEmail}" camunda:elementVariable="informationEmail" />
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0fpzb7p" sourceRef="Gateway_10wj7xf" targetRef="Event_1xzndew">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${addMoreCompany=='reject' }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_03oxek0" sourceRef="Activity_184ac36" targetRef="Activity_1bcwtnn" />
+    <bpmn:sequenceFlow id="Flow_1j8v7c9" sourceRef="Gateway_10wj7xf" targetRef="DocumentReviewByReinsuranceSupervisor">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="take">
+          <camunda:script scriptFormat="groovy">execution.setVariable('sendTable',sendTable2)</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${( addMoreCompany=='accept' &amp;&amp; taskState=='reject')|| (taskState=='accept' &amp;&amp; sendTable2.isEmpty() &amp;&amp; remainRate!=0) }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1izjnle" sourceRef="responseEmailByExpert" targetRef="recieveInformation" />
+    <bpmn:sequenceFlow id="Flow_1r102qx" sourceRef="ReviewDocumentByManager" targetRef="Activity_184ac36" />
+    <bpmn:sequenceFlow id="Flow_1vjlazp" sourceRef="AttachPolicyAndDocumentByExpert" targetRef="ReviewDocumentByBoss" />
+    <bpmn:sequenceFlow id="Flow_1y7ic82" sourceRef="Gateway_10wj7xf" targetRef="Activity_1kfazx9">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionFilePolicy=='No' &amp;&amp; remainRate==0 &amp;&amp; taskState=='accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0fiu15b" sourceRef="Gateway_10wj7xf" targetRef="Activity_1a9z7pi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${ taskState=='accept' &amp;&amp; !sendTable2.isEmpty() &amp;&amp; remainRate!=0 }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0trx5px" sourceRef="Gateway_10wj7xf" targetRef="Activity_184ac36">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionFilePolicy=='Yes' &amp;&amp; (taskState=='accept' || (taskState=='reject' &amp;&amp; addMoreCompany=='accept' ) ) &amp;&amp; !keyList.isEmpty()}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_04ptn0l" sourceRef="recieveInformation" targetRef="Activity_1821pf8" />
+    <bpmn:sequenceFlow id="Flow_12oqz9f" sourceRef="SendEmail" targetRef="Gateway_182t1rp_accept" />
+    <bpmn:sequenceFlow id="Flow_0olpwx2" sourceRef="Start" targetRef="DocumentReviewBytechnicalManager" />
+    <bpmn:sequenceFlow id="Flow_1mcl42f" name="خیر" sourceRef="Gateway_01ncjze" targetRef="DocumentReviewBytechnicalManager">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!accept1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0skaxl0" name="بله" sourceRef="Gateway_01ncjze" targetRef="DocumentReviewByReinsuranceSupervisor">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accept1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0kacgrx" name="خیر" sourceRef="Gateway_0rwp0dl" targetRef="DocumentReviewByReinsuranceManager">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!accept2}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1od7f25" name="بله" sourceRef="Gateway_0rwp0dl" targetRef="ProvidingOfferLetter">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accept2}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="EAID_7A2D0660_D981_4891_AC79_D721A1469C50" sourceRef="DocumentReviewBytechnicalManager" targetRef="DocumentReviewByReinsuranceManager" />
+    <bpmn:sequenceFlow id="EAID_0BC97EF0_3B9B_471f_91E4_DA33E1BC8D78" name="بله" sourceRef="EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434" targetRef="SendEmail">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accept4}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="EAID_A7E604F2_52A1_4663_B0BC_9F6F1464C148" name="خیر" sourceRef="EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434" targetRef="ProvidingOfferLetter">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!accept4}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="EAID_362AA0BD_1AA2_4656_AF7E_6BA5FFA91F64" sourceRef="DocumentReviewByReinsuranceManager" targetRef="Gateway_01ncjze" />
+    <bpmn:sequenceFlow id="EAID_F4A0E083_4094_49a7_87B9_25CAF69A4ECD" sourceRef="LetterOfferReviewByReinsuranceSupervisor" targetRef="EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434" />
+    <bpmn:sequenceFlow id="EAID_8E161C7B_3773_4b2c_BBAC_9EC1DD6C2BE6" sourceRef="ProvidingOfferLetter" targetRef="LetterOfferReviewByReinsuranceSupervisor" />
+    <bpmn:sequenceFlow id="EAID_330B66D0_C6BE_451f_8CD2_D8170F684971" sourceRef="DocumentReviewByReinsuranceSupervisor" targetRef="Gateway_0vxad17" />
+    <bpmn:sequenceFlow id="Flow_0vzg11b" name="خیر" sourceRef="Gateway_0vxad17" targetRef="Gateway_0rwp0dl">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee=='byExpert'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tjjo89" name="بله" sourceRef="Gateway_0vxad17" targetRef="SendEmail">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee=='byBoss'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1nbmceq" sourceRef="Gateway_182t1rp_accept" targetRef="DocumentReviewByReinsuranceSupervisor">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptLetter=='No'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1fjm6ol" sourceRef="Activity_1a9z7pi" targetRef="responseEmailByBoss" />
+    <bpmn:sequenceFlow id="Flow_15n7dk2" sourceRef="Gateway_182t1rp_accept" targetRef="Activity_1a9z7pi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptLetter=='Yes'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1giohc7" sourceRef="Activity_1821pf8" targetRef="Gateway_10wj7xf" />
+    <bpmn:sequenceFlow id="Flow_11zz0yd" sourceRef="Gateway_0v24i5p" targetRef="AttachPolicyAndDocumentByExpert">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee2=='byExpert'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0r41wtu" sourceRef="ReviewDocumentByBoss" targetRef="ReviewDocumentByManager" />
+    <bpmn:sequenceFlow id="Flow_1gifxbr" sourceRef="AttachPolicyAndDocumentByBoss" targetRef="Gateway_0v24i5p" />
+    <bpmn:sequenceFlow id="Flow_0c0wu28" sourceRef="Gateway_0v24i5p" targetRef="ReviewDocumentByBoss">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee2=='byBoss'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tc70s3" sourceRef="responseEmailByBoss" targetRef="Gateway_0ix7c4o" />
+    <bpmn:sequenceFlow id="Flow_1oeoo4b" sourceRef="Gateway_0ix7c4o" targetRef="responseEmailByExpert">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee3=='byExpert'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0aqp00w" sourceRef="Gateway_0ix7c4o" targetRef="recieveInformation">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionAssingnee3=='byBoss'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_06e2499" sourceRef="Activity_1kfazx9" targetRef="AttachPolicyAndDocumentByBoss" />
+    <bpmn:sequenceFlow id="Flow_1t2ydln" sourceRef="Activity_1bcwtnn" targetRef="Event_1uys5pb" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="EAID_7C7ECEE9_29B6_46cd_B86E_E24F9429BACA" name="اخذ پوشش اتکایی اختیاری">
+    <bpmndi:BPMNPlane id="EAID_PL000000_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_DC000000_313D_4632_9561_279D2FAF6BE3">
+      <bpmndi:BPMNShape id="EAID_DO000000_29B6_46cd_B86E_E24F9429BACA" bpmnElement="GETREINSURANCE" isHorizontal="true">
+        <dc:Bounds x="161" y="43" width="2886" height="1850" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000008_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_138C74AF_D110_43cb_B9D9_BC7D36A20D4E" isHorizontal="true">
+        <dc:Bounds x="192" y="43" width="2854" height="637" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000010_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_9527B4FF_5ECD_410d_9ADB_6028940B1C73" isHorizontal="true">
+        <dc:Bounds x="192" y="1381" width="2855" height="192" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000001_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_5F7693DE_3A53_4a4b_8711_01C82E746AA7" isHorizontal="true">
+        <dc:Bounds x="192" y="679" width="2855" height="322" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000007_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_C266A02B_C2F8_4fa8_8918_DF2D3EC441D8" isHorizontal="true">
+        <dc:Bounds x="192" y="1205" width="2855" height="176" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000006_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_B2E9DA68_F378_4d36_A799_DC1C58052534" isHorizontal="true">
+        <dc:Bounds x="192" y="1001" width="2855" height="204" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_00z8hd1_di" bpmnElement="Lane_00z8hd1" isHorizontal="true">
+        <dc:Bounds x="192" y="1573" width="2855" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_10232yv_di" bpmnElement="Lane_10232yv" isHorizontal="true">
+        <dc:Bounds x="192" y="1753" width="2855" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1t2ydln_di" bpmnElement="Flow_1t2ydln">
+        <di:waypoint x="2811" y="743" />
+        <di:waypoint x="2967" y="743" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06e2499_di" bpmnElement="Flow_06e2499">
+        <di:waypoint x="2185" y="1333" />
+        <di:waypoint x="2185" y="1613" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0aqp00w_di" bpmnElement="Flow_0aqp00w">
+        <di:waypoint x="1700" y="1163" />
+        <di:waypoint x="1795" y="1163" />
+        <di:waypoint x="1795" y="783" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oeoo4b_di" bpmnElement="Flow_1oeoo4b">
+        <di:waypoint x="1675" y="1188" />
+        <di:waypoint x="1675" y="1253" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tc70s3_di" bpmnElement="Flow_1tc70s3">
+        <di:waypoint x="1675" y="1103" />
+        <di:waypoint x="1675" y="1138" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c0wu28_di" bpmnElement="Flow_0c0wu28">
+        <di:waypoint x="2315" y="1628" />
+        <di:waypoint x="2315" y="1104" />
+        <di:waypoint x="2380" y="1104" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gifxbr_di" bpmnElement="Flow_1gifxbr">
+        <di:waypoint x="2245" y="1653" />
+        <di:waypoint x="2290" y="1653" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0r41wtu_di" bpmnElement="Flow_0r41wtu">
+        <di:waypoint x="2455" y="1060" />
+        <di:waypoint x="2455" y="957" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11zz0yd_di" bpmnElement="Flow_11zz0yd">
+        <di:waypoint x="2315" y="1678" />
+        <di:waypoint x="2315" y="1773" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1giohc7_di" bpmnElement="Flow_1giohc7">
+        <di:waypoint x="2090" y="743" />
+        <di:waypoint x="2160" y="743" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15n7dk2_di" bpmnElement="Flow_15n7dk2">
+        <di:waypoint x="1443" y="708" />
+        <di:waypoint x="1443" y="340" />
+        <di:waypoint x="1620" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fjm6ol_di" bpmnElement="Flow_1fjm6ol">
+        <di:waypoint x="1670" y="380" />
+        <di:waypoint x="1670" y="702" />
+        <di:waypoint x="1675" y="702" />
+        <di:waypoint x="1675" y="1023" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nbmceq_di" bpmnElement="Flow_1nbmceq">
+        <di:waypoint x="1418" y="733" />
+        <di:waypoint x="905" y="733" />
+        <di:waypoint x="905" y="1058" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tjjo89_di" bpmnElement="Flow_1tjjo89">
+        <di:waypoint x="1098" y="1071" />
+        <di:waypoint x="1098" y="833" />
+        <di:waypoint x="1388" y="833" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1080" y="946" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vzg11b_di" bpmnElement="Flow_0vzg11b">
+        <di:waypoint x="1098" y="1121" />
+        <di:waypoint x="1098" y="1251" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1106" y="1183" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000021_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_330B66D0_C6BE_451f_8CD2_D8170F684971">
+        <di:waypoint x="1035" y="1096" />
+        <di:waypoint x="1073" y="1096" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000047_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_8E161C7B_3773_4b2c_BBAC_9EC1DD6C2BE6">
+        <di:waypoint x="1308" y="1240" />
+        <di:waypoint x="1308" y="1129" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000046_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_F4A0E083_4094_49a7_87B9_25CAF69A4ECD">
+        <di:waypoint x="1363" y="1104" />
+        <di:waypoint x="1428" y="1104" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000008_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_362AA0BD_1AA2_4656_AF7E_6BA5FFA91F64">
+        <di:waypoint x="623" y="854" />
+        <di:waypoint x="668" y="854" />
+        <di:waypoint x="668" y="1063" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000020_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_A7E604F2_52A1_4663_B0BC_9F6F1464C148">
+        <di:waypoint x="1449" y="1125" />
+        <di:waypoint x="1449" y="1274" />
+        <di:waypoint x="1363" y="1274" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_52A1_4663_B0BC_9F6F1464C148" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="1411" y="1256" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000045_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_0BC97EF0_3B9B_471f_91E4_DA33E1BC8D78">
+        <di:waypoint x="1449" y="1083" />
+        <di:waypoint x="1449" y="863" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_3B9B_471f_91E4_DA33E1BC8D78" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="1433" y="980" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000034_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_7A2D0660_D981_4891_AC79_D721A1469C50">
+        <di:waypoint x="436" y="1431" />
+        <di:waypoint x="435" y="853" />
+        <di:waypoint x="486" y="853" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1od7f25_di" bpmnElement="Flow_1od7f25">
+        <di:waypoint x="1123" y="1276" />
+        <di:waypoint x="1252" y="1276" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1145" y="1258" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kacgrx_di" bpmnElement="Flow_0kacgrx">
+        <di:waypoint x="1073" y="1276" />
+        <di:waypoint x="545" y="1276" />
+        <di:waypoint x="545" y="890" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="890" y="1258" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0skaxl0_di" bpmnElement="Flow_0skaxl0">
+        <di:waypoint x="693" y="1088" />
+        <di:waypoint x="775" y="1088" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="761" y="1070" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mcl42f_di" bpmnElement="Flow_1mcl42f">
+        <di:waypoint x="668" y="1113" />
+        <di:waypoint x="668" y="1467" />
+        <di:waypoint x="516" y="1467" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="677" y="1306" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0olpwx2_di" bpmnElement="Flow_0olpwx2">
+        <di:waypoint x="273" y="1467" />
+        <di:waypoint x="379" y="1467" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12oqz9f_di" bpmnElement="Flow_12oqz9f">
+        <di:waypoint x="1443" y="803" />
+        <di:waypoint x="1443" y="758" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04ptn0l_di" bpmnElement="Flow_04ptn0l">
+        <di:waypoint x="1893" y="743" />
+        <di:waypoint x="1959" y="743" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0trx5px_di" bpmnElement="Flow_0trx5px">
+        <di:waypoint x="2210" y="743" />
+        <di:waypoint x="2405" y="743" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fiu15b_di" bpmnElement="Flow_0fiu15b">
+        <di:waypoint x="2185" y="718" />
+        <di:waypoint x="2185" y="340" />
+        <di:waypoint x="1720" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1y7ic82_di" bpmnElement="Flow_1y7ic82">
+        <di:waypoint x="2185" y="768" />
+        <di:waypoint x="2185" y="1253" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vjlazp_di" bpmnElement="Flow_1vjlazp">
+        <di:waypoint x="2405" y="1812" />
+        <di:waypoint x="2455" y="1812" />
+        <di:waypoint x="2455" y="1148" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r102qx_di" bpmnElement="Flow_1r102qx">
+        <di:waypoint x="2455" y="869" />
+        <di:waypoint x="2455" y="783" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1izjnle_di" bpmnElement="Flow_1izjnle">
+        <di:waypoint x="1735" y="1293" />
+        <di:waypoint x="1825" y="1293" />
+        <di:waypoint x="1825" y="783" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1j8v7c9_di" bpmnElement="Flow_1j8v7c9">
+        <di:waypoint x="2169" y="752" />
+        <di:waypoint x="1885" y="903" />
+        <di:waypoint x="1885" y="1353" />
+        <di:waypoint x="905" y="1353" />
+        <di:waypoint x="905" y="1133" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03oxek0_di" bpmnElement="Flow_03oxek0">
+        <di:waypoint x="2505" y="743" />
+        <di:waypoint x="2680" y="743" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fpzb7p_di" bpmnElement="Flow_0fpzb7p">
+        <di:waypoint x="2197" y="756" />
+        <di:waypoint x="2265" y="833" />
+        <di:waypoint x="2327" y="833" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1ji7zc9_di" bpmnElement="DocumentReviewByReinsuranceManager">
+        <dc:Bounds x="486" y="816" width="137" height="74" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_182t1rp_di" bpmnElement="Gateway_182t1rp_accept" isMarkerVisible="true">
+        <dc:Bounds x="1418" y="708" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_055jycp_di" bpmnElement="SendEmail">
+        <dc:Bounds x="1388" y="803" width="110" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000036_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_E0EF1BBD_BDFF_49c8_A525_3AD664140434" isMarkerVisible="true">
+        <dc:Bounds x="1428" y="1083" width="42" height="42" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_BDFF_49c8_A525_3AD664140434" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="1480" y="1094" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0rwp0dl_di" bpmnElement="Gateway_0rwp0dl" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="1251" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065" y="1308" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0vxad17_di" bpmnElement="Gateway_0vxad17" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="1071" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1096" y="1059" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ua77ku_di" bpmnElement="ProvidingOfferLetter">
+        <dc:Bounds x="1252" y="1240" width="111" height="68" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19adjl6_di" bpmnElement="LetterOfferReviewByReinsuranceSupervisor">
+        <dc:Bounds x="1235" y="1060" width="128" height="69" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08di6xs_di" bpmnElement="DocumentReviewByReinsuranceSupervisor">
+        <dc:Bounds x="775" y="1058" width="260" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_01ncjze_di" bpmnElement="Gateway_01ncjze" isMarkerVisible="true">
+        <dc:Bounds x="643" y="1063" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="585" y="1056" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ckccrh_di" bpmnElement="DocumentReviewBytechnicalManager">
+        <dc:Bounds x="379" y="1431" width="137" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000011_29B6_46cd_B86E_E24F9429BACA" bpmnElement="Start">
+        <dc:Bounds x="243" y="1452" width="30" height="30" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_F548_453e_A261_D19F7675384D" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="223" y="1489" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_184ac36_di" bpmnElement="Activity_184ac36">
+        <dc:Bounds x="2405" y="703" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xzndew_di" bpmnElement="Event_1xzndew">
+        <dc:Bounds x="2327" y="815" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08zo8nm_di" bpmnElement="recieveInformation">
+        <dc:Bounds x="1757" y="703" width="136" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1k5tpbw_di" bpmnElement="Gateway_10wj7xf">
+        <dc:Bounds x="2160" y="718" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2117" y="775" width="76" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1821pf8_di" bpmnElement="Activity_1821pf8" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="1959" y="703" width="131" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0l8kt8e_di" bpmnElement="ReviewDocumentByManager">
+        <dc:Bounds x="2380" y="869" width="149" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vbvoao_di" bpmnElement="ReviewDocumentByBoss" bioc:stroke="rgb(251, 140, 0)" bioc:fill="rgb(255, 224, 178)">
+        <dc:Bounds x="2380" y="1060" width="149" height="88" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v24i5p_di" bpmnElement="Gateway_0v24i5p" isMarkerVisible="true">
+        <dc:Bounds x="2290" y="1628" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1eftkv0_di" bpmnElement="AttachPolicyAndDocumentByExpert" bioc:stroke="rgb(251, 140, 0)" bioc:fill="rgb(255, 224, 178)">
+        <dc:Bounds x="2265" y="1773" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ix7c4o_di" bpmnElement="Gateway_0ix7c4o" isMarkerVisible="true">
+        <dc:Bounds x="1650" y="1138" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09a6ia3_di" bpmnElement="responseEmailByExpert">
+        <dc:Bounds x="1635" y="1253" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1unen90_di" bpmnElement="responseEmailByBoss">
+        <dc:Bounds x="1625" y="1023" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y8izx0_di" bpmnElement="AttachPolicyAndDocumentByBoss" bioc:stroke="rgb(251, 140, 0)" bioc:fill="rgb(255, 224, 178)">
+        <dc:Bounds x="2125" y="1613" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1kfazx9_di" bpmnElement="Activity_1kfazx9" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="2119" y="1253" width="131" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1uys5pb_di" bpmnElement="Event_1uys5pb">
+        <dc:Bounds x="2967" y="725" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1bcwtnn_di" bpmnElement="Activity_1bcwtnn" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="2680" y="703" width="131" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1a9z7pi_di" bpmnElement="Activity_1a9z7pi">
+        <dc:Bounds x="1620" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+      <dc:Font name="B Mitra" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

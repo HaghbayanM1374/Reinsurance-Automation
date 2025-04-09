@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ssbp="www.sparxsystems.com.au/bpmn20" id="EAPK_3E484AFC_313D_4632_9561_279D2FAF6BE3" name="Package1" targetNamespace="www.sparxsystems.com.au/bpmn20" exporter="Camunda Modeler" exporterVersion="4.0.0">
+  <bpmn:collaboration id="EAID_DC000000_313D_4632_9561_279D2FAF6BE3" isClosed="false">
+    <bpmn:participant id="GETREINSURANCE" name="صورت حساب اخذ پوشش اتکایی اختیاری" processRef="BP-05-01-01" />
+  </bpmn:collaboration>
+  <bpmn:process id="BP-05-01-01" name="صورت حساب اخذ پوشش اتکایی اختیاری" processType="None" isClosed="false" isExecutable="true" camunda:candidateStarterGroups="Employee">
+    <bpmn:laneSet id="EAID_LS000000_0AB5_44b4_B0B4_39E5F07F629C">
+      <bpmn:lane id="EAID_5F7693DE_3A53_4a4b_8711_01C82E746AA7" name="مدیر بیمه‌های اتکایی و امور بین الملل">
+        <bpmn:flowNodeRef>AcceptBills</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_004th3n</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_138C74AF_D110_43cb_B9D9_BC7D36A20D4E" name="شرکت اتکایی" />
+      <bpmn:lane id="EAID_B2E9DA68_F378_4d36_A799_DC1C58052534" name="رییس اداره واگذاری اتکایی">
+        <bpmn:flowNodeRef>Event_0lfasib</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>CheckBill</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AcceptForProvidingReinsurance</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_036rbuv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0pkxw5n</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SendEmail</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="EAID_C266A02B_C2F8_4fa8_8918_DF2D3EC441D8" name="کارشناس واگذاری اتکایی اختیاری">
+        <bpmn:flowNodeRef>ProvidingBills</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0v7g0l3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_16mmmh0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EAID_5FD05155_4A5C_48bb_A341_EABDD17F9FEA</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0wyawof</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0skomn1</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="EAID_F66713A4_6192_4fbd_8717_39087B437B37" sourceRef="AcceptBills" targetRef="Gateway_004th3n" />
+    <bpmn:sequenceFlow id="EAID_9EBE3F30_F07D_464c_8721_606F9012126E" name="بله" sourceRef="EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294" targetRef="AcceptBills">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptBills=='Yes'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="EAID_2796C1DD_EFBC_4bbb_B0B5_3B0D7C752FC5" sourceRef="CheckBill" targetRef="EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294" />
+    <bpmn:sequenceFlow id="EAID_CF900EC0_480B_419f_8739_7DFBC4986F45" sourceRef="Event_0lfasib" targetRef="AcceptForProvidingReinsurance" />
+    <bpmn:sequenceFlow id="EAID_110190B9_31CD_4aca_BC52_8D828D60F41B" sourceRef="ProvidingBills" targetRef="CheckBill" />
+    <bpmn:sequenceFlow id="EAID_0C5A0DD5_AFE0_456d_9285_03BEC6F2FF71" sourceRef="AcceptForProvidingReinsurance" targetRef="ProvidingBills" />
+    <bpmn:sequenceFlow id="EAID_B8BB376B_26C2_4f0f_891A_134952DBE18B" name="خیر" sourceRef="EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294" targetRef="ProvidingBills">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptBills=='No'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0tg06yx" name="بله" sourceRef="Gateway_004th3n" targetRef="SendEmail">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptBills2=='Yes'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1dbmcw3" name="خیر" sourceRef="Gateway_004th3n" targetRef="CheckBill">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${acceptBills2=='No'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="AcceptBills" name="تایید صورتحساب" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="Reinsuranc&#38;InternationalAffairsManager">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">def rate2=execution.getVariable('rate')
+execution.setVariable('rate2',rate2)</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/AcceptBills</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('AcceptBills_counter');n=(n==null)?1:n+1;task.execution.setVariable('AcceptBills_counter',n);
+task.execution.setVariable('assigneeAcceptBills',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_9EBE3F30_F07D_464c_8721_606F9012126E</bpmn:incoming>
+      <bpmn:outgoing>EAID_F66713A4_6192_4fbd_8717_39087B437B37</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_004th3n" name="آیا صورت حساب مورد تایید است؟">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>EAID_F66713A4_6192_4fbd_8717_39087B437B37</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tg06yx</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1dbmcw3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:startEvent id="Event_0lfasib" name="سابقه" camunda:formKey="app:start-form">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">execution.setBusinessKey(""+(new Date().getTime()-1577824200000));</camunda:script>
+        </camunda:executionListener>
+      </extensionElements>
+      <bpmn:outgoing>EAID_CF900EC0_480B_419f_8739_7DFBC4986F45</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294" name="آیا صورت حساب مورد تایید است؟">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>EAID_2796C1DD_EFBC_4bbb_B0B5_3B0D7C752FC5</bpmn:incoming>
+      <bpmn:outgoing>EAID_9EBE3F30_F07D_464c_8721_606F9012126E</bpmn:outgoing>
+      <bpmn:outgoing>EAID_B8BB376B_26C2_4f0f_891A_134952DBE18B</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="CheckBill" name="بررسی صورتحساب" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/CheckBill</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('CheckBill_counter');n=(n==null)?1:n+1;task.execution.setVariable('CheckBill_counter',n);
+task.execution.setVariable('assigneeCheckBill',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_110190B9_31CD_4aca_BC52_8D828D60F41B</bpmn:incoming>
+      <bpmn:incoming>Flow_1dbmcw3</bpmn:incoming>
+      <bpmn:outgoing>EAID_2796C1DD_EFBC_4bbb_B0B5_3B0D7C752FC5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="ProvidingBills" name="تهیه صورتحساب" implementation="##unspecified" camunda:formKey="app:task-form" camunda:assignee="${users1.id}">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/ProvidingBills</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('ProvidingBills_counter');n=(n==null)?1:n+1;task.execution.setVariable('ProvidingBills_counter',n);
+task.execution.setVariable('assigneeProvidingBills',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_0C5A0DD5_AFE0_456d_9285_03BEC6F2FF71</bpmn:incoming>
+      <bpmn:incoming>EAID_B8BB376B_26C2_4f0f_891A_134952DBE18B</bpmn:incoming>
+      <bpmn:outgoing>EAID_110190B9_31CD_4aca_BC52_8D828D60F41B</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="AcceptForProvidingReinsurance" name="اعلام پذیرش " implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">execution.setVariable("acceptRateReinsurance",company.offerRateToReinsuranceCompany)
+execution.setVariable("reinsuranceCompanyCandidate",company.companyName.label)</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/AcceptForProvidingReinsurance</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('AcceptForProvidingReinsurance_counter');n=(n==null)?1:n+1;task.execution.setVariable('AcceptForProvidingReinsurance_counter',n);
+task.execution.setVariable('assigneeAcceptForProvidingReinsurance',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>EAID_CF900EC0_480B_419f_8739_7DFBC4986F45</bpmn:incoming>
+      <bpmn:outgoing>EAID_0C5A0DD5_AFE0_456d_9285_03BEC6F2FF71</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0rhlbpx" sourceRef="SendEmail" targetRef="Activity_0wyawof" />
+    <bpmn:exclusiveGateway id="Gateway_0v7g0l3">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="manual" value="true" />
+        </camunda:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12fyh2m</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fambsn</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1vc3lkx</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1rctjbi</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0fambsn" sourceRef="Gateway_0v7g0l3" targetRef="Activity_16mmmh0">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionFilePolicy=='No' &amp;&amp; sendTableEmail[0].sendEmail==true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_16mmmh0" name="Send Mail" implementation="##WebService">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="to">${addressEmail}</camunda:inputParameter>
+            <camunda:inputParameter name="subject">${subjectLetter}</camunda:inputParameter>
+            <camunda:inputParameter name="text">
+              <camunda:script scriptFormat="freemarker">${textLetter}</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="from">bpms@daycent.com</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0fambsn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ocwqte</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0ocwqte" sourceRef="Activity_16mmmh0" targetRef="EAID_5FD05155_4A5C_48bb_A341_EABDD17F9FEA" />
+    <bpmn:serviceTask id="Activity_036rbuv" name="Send Mail" implementation="##WebService">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="to">${addressEmail}</camunda:inputParameter>
+            <camunda:inputParameter name="subject">${subjectLetter}</camunda:inputParameter>
+            <camunda:inputParameter name="text">
+              <camunda:script scriptFormat="freemarker">${textLetter}</camunda:script>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="from">bpms@daycent.com</camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>mail-send</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1vc3lkx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dlasi5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1vc3lkx" sourceRef="Gateway_0v7g0l3" targetRef="Activity_036rbuv">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${questionFilePolicy=='Yes' &amp;&amp; sendTableEmail[0].sendEmail==true }</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="EAID_5FD05155_4A5C_48bb_A341_EABDD17F9FEA">
+      <bpmn:incoming>Flow_0ocwqte</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_0pkxw5n">
+      <bpmn:incoming>Flow_1dlasi5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1dlasi5" sourceRef="Activity_036rbuv" targetRef="Event_0pkxw5n" />
+    <bpmn:userTask id="SendEmail" name="ارسال اصل بیمه‌نامه، گزارش بازدید، سایر مستندات و صورتحساب مالی" implementation="##unspecified" camunda:formKey="app:task-form" camunda:candidateGroups="HeadOfAcceptableReinsurance">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="groovy">execution.setVariable('sendTableEmail',acceptCompany)
+sendTableEmail[0].remove('textLetter')
+sendTableEmail[0].remove('subjectLetter')</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/SendEmail</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('SendEmail_counter');n=(n==null)?1:n+1;task.execution.setVariable('SendEmail_counter',n);
+task.execution.setVariable('assigneeSendEmail',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0tg06yx</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rhlbpx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0wyawof" name="بارگذاری مستندات شامل بیمه‌نامه صادر شده در سامانه سنهاب" implementation="##unspecified" camunda:formKey="app:task-form" camunda:assignee="${users2.id}">
+      <extensionElements xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="groovy">if(sendTableEmail[0].sendEmail==true){
+execution.setVariable('subjectLetter',sendTableEmail[0].subjectLetter)
+execution.setVariable('textLetter',sendTableEmail[0].textLetter)
+execution.setVariable('addressEmail',sendTableEmail[0].emailAddress.collect{it.label}.join(", "))
+};</camunda:script>
+        </camunda:executionListener>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="formio_options">
+            <camunda:map>
+              <camunda:entry key="json">BP-05-01-01/Activity_0wyawof</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">def n=task.execution.getVariable('Activity_0wyawof_counter');n=(n==null)?1:n+1;task.execution.setVariable('Activity_0wyawof_counter',n);
+task.execution.setVariable('assigneeActivity_0wyawof',task.getAssignee())</camunda:script>
+        </camunda:taskListener>
+      </extensionElements>
+      <bpmn:incoming>Flow_0rhlbpx</bpmn:incoming>
+      <bpmn:outgoing>Flow_12fyh2m</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_12fyh2m" sourceRef="Activity_0wyawof" targetRef="Gateway_0v7g0l3" />
+    <bpmn:endEvent id="Event_0skomn1">
+      <bpmn:incoming>Flow_1rctjbi</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1rctjbi" sourceRef="Gateway_0v7g0l3" targetRef="Event_0skomn1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendTableEmail[0].sendEmail==false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:signal id="Signal_1kklnvg" name="Signal_0gh55g0" />
+  <bpmndi:BPMNDiagram id="EAID_7C7ECEE9_29B6_46cd_B86E_E24F9429BACA" name="اخذ پوشش اتکایی اختیاری">
+    <bpmndi:BPMNPlane id="EAID_PL000000_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_DC000000_313D_4632_9561_279D2FAF6BE3">
+      <bpmndi:BPMNShape id="EAID_DO000000_29B6_46cd_B86E_E24F9429BACA" bpmnElement="GETREINSURANCE" isHorizontal="true">
+        <dc:Bounds x="171" y="84" width="2006" height="926" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000007_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_C266A02B_C2F8_4fa8_8918_DF2D3EC441D8" isHorizontal="true">
+        <dc:Bounds x="202" y="782" width="1975" height="228" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000006_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_B2E9DA68_F378_4d36_A799_DC1C58052534" isHorizontal="true">
+        <dc:Bounds x="202" y="578" width="1975" height="204" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000008_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_138C74AF_D110_43cb_B9D9_BC7D36A20D4E" isHorizontal="true">
+        <dc:Bounds x="202" y="84" width="1974" height="163" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000001_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_5F7693DE_3A53_4a4b_8711_01C82E746AA7" isHorizontal="true">
+        <dc:Bounds x="202" y="246" width="1975" height="332" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1rctjbi_di" bpmnElement="Flow_1rctjbi">
+        <di:waypoint x="1740" y="898" />
+        <di:waypoint x="1740" y="990" />
+        <di:waypoint x="1862" y="990" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12fyh2m_di" bpmnElement="Flow_12fyh2m">
+        <di:waypoint x="1540" y="873" />
+        <di:waypoint x="1715" y="873" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dlasi5_di" bpmnElement="Flow_1dlasi5">
+        <di:waypoint x="1960" y="730" />
+        <di:waypoint x="2022" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vc3lkx_di" bpmnElement="Flow_1vc3lkx">
+        <di:waypoint x="1740" y="848" />
+        <di:waypoint x="1740" y="730" />
+        <di:waypoint x="1860" y="730" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ocwqte_di" bpmnElement="Flow_0ocwqte">
+        <di:waypoint x="1960" y="873" />
+        <di:waypoint x="2025" y="873" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fambsn_di" bpmnElement="Flow_0fambsn">
+        <di:waypoint x="1763" y="875" />
+        <di:waypoint x="1860" y="874" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rhlbpx_di" bpmnElement="Flow_0rhlbpx">
+        <di:waypoint x="1280" y="660" />
+        <di:waypoint x="1420" y="660" />
+        <di:waypoint x="1420" y="832" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dbmcw3_di" bpmnElement="Flow_1dbmcw3">
+        <di:waypoint x="928" y="461" />
+        <di:waypoint x="928" y="390" />
+        <di:waypoint x="691" y="390" />
+        <di:waypoint x="691" y="667" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="802" y="372" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tg06yx_di" bpmnElement="Flow_0tg06yx">
+        <di:waypoint x="953" y="486" />
+        <di:waypoint x="1110" y="486" />
+        <di:waypoint x="1110" y="622" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1106" y="508" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000043_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_B8BB376B_26C2_4f0f_891A_134952DBE18B">
+        <di:waypoint x="821" y="716" />
+        <di:waypoint x="821" y="853" />
+        <di:waypoint x="746" y="853" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_26C2_4f0f_891A_134952DBE18B" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="790" y="835" width="16" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000028_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_0C5A0DD5_AFE0_456d_9285_03BEC6F2FF71">
+        <di:waypoint x="490" y="740" />
+        <di:waypoint x="490" y="855" />
+        <di:waypoint x="636" y="855" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000055_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_110190B9_31CD_4aca_BC52_8D828D60F41B">
+        <di:waypoint x="689" y="825" />
+        <di:waypoint x="689" y="740" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000042_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_CF900EC0_480B_419f_8739_7DFBC4986F45">
+        <di:waypoint x="358" y="695" />
+        <di:waypoint x="410" y="695" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_480B_419f_8739_7DFBC4986F45" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="436" y="675" width="7" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000039_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_2796C1DD_EFBC_4bbb_B0B5_3B0D7C752FC5">
+        <di:waypoint x="746" y="695" />
+        <di:waypoint x="800" y="695" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000038_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_9EBE3F30_F07D_464c_8721_606F9012126E">
+        <di:waypoint x="821" y="674" />
+        <di:waypoint x="821" y="515" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_F07D_464c_8721_606F9012126E" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="805" y="553" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="EAID_DL000006_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_F66713A4_6192_4fbd_8717_39087B437B37">
+        <di:waypoint x="867" y="486" />
+        <di:waypoint x="903" y="486" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_17tmzis_di" bpmnElement="AcceptBills">
+        <dc:Bounds x="757" y="455" width="110" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_004th3n_di" bpmnElement="Gateway_004th3n" isMarkerVisible="true">
+        <dc:Bounds x="903" y="461" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="855" y="518" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0lfasib_di" bpmnElement="Event_0lfasib">
+        <dc:Bounds x="322" y="677" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="332" y="720" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000041_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_323EB10A_3A4C_4970_B2CA_B9C57C8B3294" isMarkerVisible="true">
+        <dc:Bounds x="800" y="674" width="42" height="42" />
+        <bpmndi:BPMNLabel id="EAID_LBL000000_3A4C_4970_B2CA_B9C57C8B3294" labelStyle="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+          <dc:Bounds x="827" y="673" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1y0j5zj_di" bpmnElement="CheckBill">
+        <dc:Bounds x="636" y="667" width="110" height="73" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1o9rmi5_di" bpmnElement="ProvidingBills">
+        <dc:Bounds x="636" y="825" width="110" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0y5f0dz_di" bpmnElement="AcceptForProvidingReinsurance">
+        <dc:Bounds x="410" y="665" width="160" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v7g0l3_di" bpmnElement="Gateway_0v7g0l3" isMarkerVisible="true">
+        <dc:Bounds x="1715" y="848" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16mmmh0_di" bpmnElement="Activity_16mmmh0">
+        <dc:Bounds x="1860" y="833" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_036rbuv_di" bpmnElement="Activity_036rbuv">
+        <dc:Bounds x="1860" y="690" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EAID_DO000030_29B6_46cd_B86E_E24F9429BACA" bpmnElement="EAID_5FD05155_4A5C_48bb_A341_EABDD17F9FEA">
+        <dc:Bounds x="2025" y="858" width="30" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0pkxw5n_di" bpmnElement="Event_0pkxw5n">
+        <dc:Bounds x="2022" y="712" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19r2sdh_di" bpmnElement="SendEmail">
+        <dc:Bounds x="1020" y="622" width="260" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wyawof_di" bpmnElement="Activity_0wyawof">
+        <dc:Bounds x="1280" y="835" width="260" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0skomn1_di" bpmnElement="Event_0skomn1">
+        <dc:Bounds x="1862" y="972" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="EAID_LS000000_29B6_46cd_B86E_E24F9429BACA">
+      <dc:Font name="B Mitra" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
